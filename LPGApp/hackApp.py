@@ -19,182 +19,186 @@ with leaderTab:
     config = golfScores.read_config()
     entryLock, tournamentDay, cutVal = config.loc['entryLock']['value'], config.loc['tournamentDay']['value'], config.loc['cutValue']['value']
     
-    playerScores, eventTitle, cutWD = golfScores.getScores()
-    leaderboard = golfScores.getLeaderboard(playerScores)
+    if entryLock == 1:
+        playerScores, eventTitle, cutWD = golfScores.getScores()
+        leaderboard = golfScores.getLeaderboard(playerScores)
+        
+        rankIndex = range(1,len(leaderboard)+1)
+        leaderboard['Rank'] = leaderboard['Score'].rank(method='min').astype(int)#rankIndex
+        
+        leaderboard['Score to Beat'] = 0
     
-    rankIndex = range(1,len(leaderboard)+1)
-    leaderboard['Rank'] = leaderboard['Score'].rank(method='min').astype(int)#rankIndex
+        count = 1
+        i = 0
+        for index, row in leaderboard.iterrows():
     
-    leaderboard['Score to Beat'] = 0
-
-    count = 1
-    i = 0
-    for index, row in leaderboard.iterrows():
-
-        gA = row['A Score']
-        gB = row['B Score']
-        gC = row['C Score']
-        gD = row['D Score']
-        gE = row['E Score']
-        gF = row['F Score']
-        
-        scoreList = [gA, gB, gC, gD, gE, gF]
-        scoreList = sorted(scoreList)
-        print(scoreList, scoreList[3])
-        leaderboard.iloc[i,-1] = scoreList[3]
-        
-        count+=1
-        i += 1
-
-    leaderboard['Group A'] = np.where(leaderboard['A Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group A: Player'] + ": " + leaderboard['A Score'].astype(str),
-                                      "~~" + leaderboard['Group A: Player'] + ": " + leaderboard['A Score'].astype(str) + "~~")
-
-    leaderboard['Group B'] = np.where(leaderboard['B Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group B: Player'] + ": " + leaderboard['B Score'].astype(str),
-                                      "~~" + leaderboard['Group B: Player'] + ": " + leaderboard['B Score'].astype(str) + "~~")
-
-    leaderboard['Group C'] = np.where(leaderboard['C Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group C: Player'] + ": " + leaderboard['C Score'].astype(str),
-                                      "~~" + leaderboard['Group C: Player'] + ": " + leaderboard['C Score'].astype(str) + "~~")
-
-    leaderboard['Group D'] = np.where(leaderboard['D Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group D: Player'] + ": " + leaderboard['D Score'].astype(str),
-                                      "~~" + leaderboard['Group D: Player'] + ": " + leaderboard['D Score'].astype(str) + "~~")
-
-    leaderboard['Group E'] = np.where(leaderboard['E Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group E: Player'] + ": " + leaderboard['E Score'].astype(str),
-                                      "~~" + leaderboard['Group E: Player'] + ": " + leaderboard['E Score'].astype(str) + "~~")
-
-    leaderboard['Group F'] = np.where(leaderboard['F Score'] <= leaderboard['Score to Beat'],
-                                      leaderboard['Group F: Player'] + ": " + leaderboard['F Score'].astype(str),
-                                      "~~" + leaderboard['Group F: Player'] + ": " + leaderboard['F Score'].astype(str) + "~~")                                  
-
+            gA = row['A Score']
+            gB = row['B Score']
+            gC = row['C Score']
+            gD = row['D Score']
+            gE = row['E Score']
+            gF = row['F Score']
+            
+            scoreList = [gA, gB, gC, gD, gE, gF]
+            scoreList = sorted(scoreList)
+            print(scoreList, scoreList[3])
+            leaderboard.iloc[i,-1] = scoreList[3]
+            
+            count+=1
+            i += 1
     
-    leaderboard2 = []
-    for index, row in leaderboard.iterrows():
-        a, b, c, d, e, f = int(row['A Score']), row['B Score'], row['C Score'], row['D Score'], row['E Score'], row['F Score']
-
-        #a, b, c, d, e, f = -4, -5, -6, -1, -1, 0
-        scores = [a,b,c,d,e,f]
-        scoreLabels = ['A Score','B Score','C Score','D Score','E Score','F Score']
-        scoreLetter = ['A','B','C','D','E','F']
-        # combine scores and labels into a list of tuples
+        leaderboard['Group A'] = np.where(leaderboard['A Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group A: Player'] + ": " + leaderboard['A Score'].astype(str),
+                                          "~~" + leaderboard['Group A: Player'] + ": " + leaderboard['A Score'].astype(str) + "~~")
+    
+        leaderboard['Group B'] = np.where(leaderboard['B Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group B: Player'] + ": " + leaderboard['B Score'].astype(str),
+                                          "~~" + leaderboard['Group B: Player'] + ": " + leaderboard['B Score'].astype(str) + "~~")
+    
+        leaderboard['Group C'] = np.where(leaderboard['C Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group C: Player'] + ": " + leaderboard['C Score'].astype(str),
+                                          "~~" + leaderboard['Group C: Player'] + ": " + leaderboard['C Score'].astype(str) + "~~")
+    
+        leaderboard['Group D'] = np.where(leaderboard['D Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group D: Player'] + ": " + leaderboard['D Score'].astype(str),
+                                          "~~" + leaderboard['Group D: Player'] + ": " + leaderboard['D Score'].astype(str) + "~~")
+    
+        leaderboard['Group E'] = np.where(leaderboard['E Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group E: Player'] + ": " + leaderboard['E Score'].astype(str),
+                                          "~~" + leaderboard['Group E: Player'] + ": " + leaderboard['E Score'].astype(str) + "~~")
+    
+        leaderboard['Group F'] = np.where(leaderboard['F Score'] <= leaderboard['Score to Beat'],
+                                          leaderboard['Group F: Player'] + ": " + leaderboard['F Score'].astype(str),
+                                          "~~" + leaderboard['Group F: Player'] + ": " + leaderboard['F Score'].astype(str) + "~~")                                  
+    
         
-        scoreTuples = list(zip(scores, scoreLabels, scoreLetter))
-        
-        # sort the list of tuples based on the score value (in ascending order)
-        sortedTuples = sorted(scoreTuples)
-        
-        # unpack the sorted tuples into two separate lists
-        sortedScores = []
-        sortedLabels = []
-        sortedLetters = []
-        for score, label, letter in sortedTuples:
-            sortedScores.append(score)
-            sortedLabels.append(label)
-            sortedLetters.append(letter)
-                  
-        for i in range(0,6):
-            score = int(sortedScores[i])
-            label = sortedLabels[i]
-            letter = sortedLetters[i]
-            field = "Group " + letter
-            player = "Group " + letter + ": Player"
-            cut = False
+        leaderboard2 = []
+        for index, row in leaderboard.iterrows():
+            a, b, c, d, e, f = int(row['A Score']), row['B Score'], row['C Score'], row['D Score'], row['E Score'], row['F Score']
+    
+            #a, b, c, d, e, f = -4, -5, -6, -1, -1, 0
+            scores = [a,b,c,d,e,f]
+            scoreLabels = ['A Score','B Score','C Score','D Score','E Score','F Score']
+            scoreLetter = ['A','B','C','D','E','F']
+            # combine scores and labels into a list of tuples
             
-            if re.sub(r" \([^)]*\)", "", row[player]) in cutWD.keys():
-                cut = True
+            scoreTuples = list(zip(scores, scoreLabels, scoreLetter))
             
-            if i <= 3:
-                print(player)
-                if cut:
-                    row[field] = row[player] + ": " + "CUT"
-                else:
-                    row[field] = row[player] + ": " + str(int(row[label]))
-            else:
-                if cut:
-                    row[field] = "~" + row[player] + ": " + "CUT"
-                else:
-                    row[field] = "~" + row[player] + ": " + str(int(row[label]))
+            # sort the list of tuples based on the score value (in ascending order)
+            sortedTuples = sorted(scoreTuples)
             
-        
-        #if 3 > 2:
-        cols = ['Entry', 'Score', 'Group A','Group B','Group C','Group D', 'Group E','Group F']
-        playersMadeCut = (re.sub(r" \([^)]*\)", "", row['Group A: Player']) not in cutWD.keys()) + \
-                            (re.sub(r" \([^)]*\)", "", row['Group B: Player']) not in cutWD.keys()) +\
-                            (re.sub(r" \([^)]*\)", "", row['Group C: Player']) not in cutWD.keys()) +\
-                            (re.sub(r" \([^)]*\)", "", row['Group D: Player']) not in cutWD.keys()) +\
-                            (re.sub(r" \([^)]*\)", "", row['Group E: Player']) not in cutWD.keys()) +\
-                            (re.sub(r" \([^)]*\)", "", row['Group F: Player']) not in cutWD.keys())#(a <= cutVal) + (b <= cutVal) + (c <= cutVal) + (d <= cutVal) + (e <= cutVal) + (f <= cutVal)
+            # unpack the sorted tuples into two separate lists
+            sortedScores = []
+            sortedLabels = []
+            sortedLetters = []
+            for score, label, letter in sortedTuples:
+                sortedScores.append(score)
+                sortedLabels.append(label)
+                sortedLetters.append(letter)
+                      
+            for i in range(0,6):
+                score = int(sortedScores[i])
+                label = sortedLabels[i]
+                letter = sortedLetters[i]
+                field = "Group " + letter
+                player = "Group " + letter + ": Player"
+                cut = False
                 
-        
-        #print(row['Entry'], playersMadeCut)
-        if playersMadeCut < 4:
-            for col in cols:
-                if "~" not in str(row[col]):
-                    if col == 'Score':
-                        row[col] = str(int(row[col]))
+                if re.sub(r" \([^)]*\)", "", row[player]) in cutWD.keys():
+                    cut = True
+                
+                if i <= 3:
+                    print(player)
+                    if cut:
+                        row[field] = row[player] + ": " + "CUT"
                     else:
-                        row[col] = "~" + str(row[col])
-          
-        leaderboard2.append(row.tolist())
-            
-    leaderboard2DF = pd.DataFrame(leaderboard2)
-    leaderboard2DF.columns = leaderboard.columns
-    leaderboard = leaderboard2DF
-    
-    cols = ['Rank', 'Entry', 'Score', 'Group A','Group B','Group C','Group D', 'Group E','Group F']
-    markdownLeader = leaderboard[cols]
-    markdownLeader['Score'] = np.where(markdownLeader['Entry'].str.contains("~"), "~"+markdownLeader['Score'].astype(int).astype(str)+"~",markdownLeader['Score'].astype(int).astype(str))
-    
-    ranks = markdownLeader['Rank'].unique().tolist()
-    # convert dataframe to markdown table string
-    def color_coding(row):
-        hexList = ['#807fff','#7fbfff','#7fffff','#7eff80','#beff7f','#feff7f',   '#9b6b71','#c04e5c','#e4334a']
-        
-        rowRank = ranks.index(row['Rank'])
-        if rowRank < len(hexList):
-            out = ['background-color:' + str(hexList[rowRank])] * len(row)
-        else:
-            out = ['background-color:' + str(hexList[-1])] * len(row)
-        
-        
-        if (rowRank % 2) == 0:
-           out = ['background-color:' + str('#2a475e')] * len(row)
-           
-           for c in cols:
-               if "~" in str(row[c]):
-                   out[cols.index(c)] += ';color:#425b7f'
-        else:
-           out = ['background-color:' + str('#1f4f2d')] * len(row)
-           for c in cols:
-               if "~" in str(row[c]):
-                   out[cols.index(c)] += ';color:#367f47'
-        
+                        row[field] = row[player] + ": " + str(int(row[label]))
+                else:
+                    if cut:
+                        row[field] = "~" + row[player] + ": " + "CUT"
+                    else:
+                        row[field] = "~" + row[player] + ": " + str(int(row[label]))
                 
+            
+            #if 3 > 2:
+            cols = ['Entry', 'Score', 'Group A','Group B','Group C','Group D', 'Group E','Group F']
+            playersMadeCut = (re.sub(r" \([^)]*\)", "", row['Group A: Player']) not in cutWD.keys()) + \
+                                (re.sub(r" \([^)]*\)", "", row['Group B: Player']) not in cutWD.keys()) +\
+                                (re.sub(r" \([^)]*\)", "", row['Group C: Player']) not in cutWD.keys()) +\
+                                (re.sub(r" \([^)]*\)", "", row['Group D: Player']) not in cutWD.keys()) +\
+                                (re.sub(r" \([^)]*\)", "", row['Group E: Player']) not in cutWD.keys()) +\
+                                (re.sub(r" \([^)]*\)", "", row['Group F: Player']) not in cutWD.keys())#(a <= cutVal) + (b <= cutVal) + (c <= cutVal) + (d <= cutVal) + (e <= cutVal) + (f <= cutVal)
+                    
+            
+            #print(row['Entry'], playersMadeCut)
+            if playersMadeCut < 4:
+                for col in cols:
+                    if "~" not in str(row[col]):
+                        if col == 'Score':
+                            row[col] = str(int(row[col]))
+                        else:
+                            row[col] = "~" + str(row[col])
+              
+            leaderboard2.append(row.tolist())
+                
+        leaderboard2DF = pd.DataFrame(leaderboard2)
+        leaderboard2DF.columns = leaderboard.columns
+        leaderboard = leaderboard2DF
         
-        return out#['background-color:#2a4858'] * len(row) if "Jon Rahm" in row['Group A'] else ['background-color:green'] * len(row)
-
-    # Apply the formatting using the color_coding function
-    container_style = '''
-    width: 100%;
-    height: 300;
-    overflow-y: auto;
-    '''
-    styled_df = markdownLeader.style.apply(color_coding, axis=1)
-
-    st.write(styled_df, unsafe_allow_html=True, style=container_style)
+        cols = ['Rank', 'Entry', 'Score', 'Group A','Group B','Group C','Group D', 'Group E','Group F']
+        markdownLeader = leaderboard[cols]
+        markdownLeader['Score'] = np.where(markdownLeader['Entry'].str.contains("~"), "~"+markdownLeader['Score'].astype(int).astype(str)+"~",markdownLeader['Score'].astype(int).astype(str))
+        
+        ranks = markdownLeader['Rank'].unique().tolist()
+        # convert dataframe to markdown table string
+        def color_coding(row):
+            hexList = ['#807fff','#7fbfff','#7fffff','#7eff80','#beff7f','#feff7f',   '#9b6b71','#c04e5c','#e4334a']
+            
+            rowRank = ranks.index(row['Rank'])
+            if rowRank < len(hexList):
+                out = ['background-color:' + str(hexList[rowRank])] * len(row)
+            else:
+                out = ['background-color:' + str(hexList[-1])] * len(row)
+            
+            
+            if (rowRank % 2) == 0:
+               out = ['background-color:' + str('#2a475e')] * len(row)
+               
+               for c in cols:
+                   if "~" in str(row[c]):
+                       out[cols.index(c)] += ';color:#425b7f'
+            else:
+               out = ['background-color:' + str('#1f4f2d')] * len(row)
+               for c in cols:
+                   if "~" in str(row[c]):
+                       out[cols.index(c)] += ';color:#367f47'
+            
+                    
+            
+            return out#['background-color:#2a4858'] * len(row) if "Jon Rahm" in row['Group A'] else ['background-color:green'] * len(row)
     
-    # Set the style of the Player column to right-align the text
-    playerScores.index = playerScores['Score'].rank(method='min').astype(int)#rankIndex
-    #styled_df = playerScores.style.set_properties(**{'text-align': 'right'}, subset=['Player'])
+        # Apply the formatting using the color_coding function
+        container_style = '''
+        width: 100%;
+        height: 300;
+        overflow-y: auto;
+        '''
+        styled_df = markdownLeader.style.apply(color_coding, axis=1)
     
-    # Convert the styled data frame to an HTML table and remove the index column
-    #html = styled_df.to_html(index=False)
-    
-    # Display the HTML table using st.write()
-    st.write(playerScores)
+        st.write(styled_df, unsafe_allow_html=True, style=container_style)
+        
+        # Set the style of the Player column to right-align the text
+        playerScores.index = playerScores['Score'].rank(method='min').astype(int)#rankIndex
+        #styled_df = playerScores.style.set_properties(**{'text-align': 'right'}, subset=['Player'])
+        
+        # Convert the styled data frame to an HTML table and remove the index column
+        #html = styled_df.to_html(index=False)
+        
+        # Display the HTML table using st.write()
+        st.write(playerScores)
+        
+    else:
+        st.write("Leaderboard Hidden Until Tournament Start")
     
 
 with entryTab:
@@ -269,50 +273,68 @@ with entryTab:
                     st.write("Entry Already Exists")
                 
                 
-                if groupA_write != "":
-                    groupA = groupA_write
+                if groupA_write:
+                    groupA = groupA_write[0]
+                #else:
+                #    groupA = groupA[0]
+                    
                 
-                if groupA == "":
+                if groupA[0] == "":
                     validEntry = False
                     st.write("Please Make a Group A Selection")
                     
                     
-                if groupB_write != "":
-                    groupB = groupB_write
+                    
+                if groupB_write:
+                    groupB = groupB_write[0]
+                #else:
+                #    groupB = groupB[0]
                     
                 if groupB == "":
                     validEntry = False
                     st.write("Please Make a Group B Selection")
                     
                     
-                if groupC_write != "":
-                    groupC = groupC_write
                     
-                if groupC == "":
+                if groupC_write:
+                    groupC = groupC_write[0]
+                #else:
+                #    groupC = groupC[0]
+                    
+                if groupC[0] == "":
                     validEntry = False
                     st.write("Please Make a Group C Selection")
                     
                     
-                if groupD_write != "":
-                    groupD = groupD_write
                     
-                if groupD == "":
+                if groupD_write:
+                    groupD = groupD_write[0]
+                #else:
+                #    groupD = groupD[0]
+                    
+                if groupD[0] == "":
                     validEntry = False
                     st.write("Please Make a Group D Selection")
                     
                     
-                if groupE_write != "":
-                    groupE = groupE_write
                     
-                if groupE == "":
+                if groupE_write:
+                    groupE = groupE_write[0]
+                #else:
+                #    groupE = groupE[0]
+                    
+                if groupE[0] == "":
                     validEntry = False
                     st.write("Please Make a Group E Selection")
                     
                     
-                if groupF_write != "":
-                    groupF = groupF_write
                     
-                if groupF == "":
+                if groupF_write:
+                    groupF = groupF_write[0]
+                #else:
+                #    groupF = groupF[0]
+                    
+                if groupF[0] == "":
                     validEntry = False
                     st.write("Please Make a Group F Selection")
                     
@@ -360,7 +382,7 @@ with entryTab:
                     path = r"./RawGolferPicks.csv"
                     picks.to_csv(path, index = False)
                     
-                    entryString = groupA + '\n'  + groupB
+                    #entryString = groupA + '\n'  + groupB
                     st.write("Entry Submitted Successfully!")
                     st.write("Group A: " + groupA)
                     st.write("Group B: " + groupB)

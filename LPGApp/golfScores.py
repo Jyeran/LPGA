@@ -14,14 +14,14 @@ def getScores(test = False):
     
     #-----------------------#
     
-    URL = "https://www.espn.com/golf/leaderboard"
+    URL = "https://www.espn.com/golf/leaderboard/_/tour/lpga"
     page = requests.get(URL)
     
     golf = soup(page.content, "html.parser")
     
     results = golf.find(id="fittPageContainer")
     
-    golfers = results.find_all("tr", class_="PlayerRow__Overview PlayerRow__Overview--expandable Table__TR Table__even")
+    golfers = results.find_all("tr", class_="PlayerRow__Overview Table__TR Table__even")
     
     golfScores = {}
     golfCutWD  = {}
@@ -29,6 +29,7 @@ def getScores(test = False):
     
     for g in golfers:
         info = g.find_all("td", class_="Table__TD")
+        #print(info[0].text, info[1].text)
         
         try:
             indexTest = info[3].text
@@ -76,8 +77,8 @@ def getScores(test = False):
                 golfScores[name] = [score, thru]
                 
         else:
-            name = info[1].text
-            thru = info[2].text
+            name = info[0].text
+            thru = info[1].text
             score = 0
             golfScores[name] = [score, thru]
             
@@ -100,6 +101,7 @@ def getScores(test = False):
     
     
     return golferScores, event, golfCutWD
+
     
 def getLeaderboard(golferScores, path = r"./RawGolferPicks.csv", cutValue = 10):    
     #path = r"./RawGolferPicks.csv"
