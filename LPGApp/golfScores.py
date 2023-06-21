@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as soup
 import numpy as np
 
 def getScores(test = False):
-    URL = "https://www.espn.com/golf/leaderboard"
+    URL = "https://www.espn.com/golf/leaderboard/_/tour/lpga"
     eventPage = requests.get(URL)
     eventSoup = soup(eventPage.content, "html.parser") 
     eventSoup = eventSoup.find(id="fittPageContainer")
